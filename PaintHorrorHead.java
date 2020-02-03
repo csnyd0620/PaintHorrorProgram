@@ -8,11 +8,12 @@ import javax.swing.JPanel;
 import java.awt.*;
 import java.awt.event.*;
 
-public class PaintHorrorHead
-{
+
+public class PaintHorrorHead {
 	static public int masterCount = -150; // Starts negative to give a moment for things to be done
 	static public final int PROGRAM_END_TIME = 180; //Till time out. seconds
 	static final int DELAY = 2;
+
 	static final int HEIGHT = 900, WIDTH = 1600;
 
 	public static void main(String[] args) {
@@ -21,6 +22,7 @@ public class PaintHorrorHead
 		frame.getContentPane().add(new PaintHorror(WIDTH, HEIGHT));
 		frame.pack();
 		frame.setVisible(true);
+
 
 		for (int i=0; i<PROGRAM_END_TIME*1000/DELAY; ++i) {
 			try {
@@ -33,9 +35,8 @@ public class PaintHorrorHead
 
 
 	@SuppressWarnings("serial")
-	private static class PaintHorror extends JPanel
-	{
-		private final int SIZE = 20;  // radius of brush
+	private static class PaintHorror extends JPanel {
+		private final int SIZE = 15;  // radius of brush
 		private final int FILLER = 50, FILLER_DISTANCE = 5; // Number of dots put between each point spawned by mouse. Max distance that can be between each filler point before it makes a new line.
 		private final int BULDGE_HEIGHT = 15, BULDGE_LENGTH = 10*FILLER, BULDGE_SPEED = 50000/FILLER; //smaller is faster
 		private final int BULDGE_COLOR_OFFSET = 80;
@@ -46,8 +47,9 @@ public class PaintHorrorHead
 		//private ArrayList<Color> pointColorList;
 
 		//  Constructor: Sets up this panel to listen for mouse events.
-		public PaintHorror(int height, int width)
-		{
+
+		public PaintHorror(int height, int width) {
+
 			pointList = new ArrayList<Point>();
 			//pointColorList = new ArrayList<Color>();
 
@@ -58,23 +60,26 @@ public class PaintHorrorHead
 		}
 
 		//  Draws all of the dots stored in the list.
-		public void paintComponent(Graphics page)
-		{
-			super.paintComponent(page);
 
+		public void paintComponent(Graphics page) {
+			super.paintComponent(page);
 
 			for (int i=0; i< pointList.size(); ++i) {
 				//page.setColor(pointColorList.get(i));
 				int sOffset = 0, cOffset = 0;
+				setBackground(randomColor(masterCount*1000000000));
+
 				//
 				int lengthOfTravel = pointList.size()*2-BULDGE_LENGTH;//+ BULDGE_LENGTH*2;
 				int travelSpeed = BULDGE_SPEED+pointList.size(); // auto adjusts for length of line
 				int j = (int)(lengthOfTravel/4 *Math.acos(Math.cos((Math.PI/ travelSpeed ) *PaintHorrorHead.masterCount)));
 				if (i<j && i > (j-BULDGE_LENGTH)) {
+
 					sOffset = (int)(-1*BULDGE_HEIGHT*Math.cos((Math.PI/ (BULDGE_LENGTH/2) ) *(i-(j-BULDGE_LENGTH)) )   +SIZE-6 );//+(BULDGE_HEIGHT-1));
 					cOffset = sOffset*BULDGE_COLOR_OFFSET;
 				}
 				page.setColor(randomColor(i*COLOR_POINT_OFFSET+PaintHorrorHead.masterCount+cOffset));
+
 				Point spot = new Point(pointList.get(i));
 				page.fillOval(spot.x-(SIZE+sOffset), spot.y-(SIZE+sOffset), (SIZE+sOffset)*2, (SIZE+sOffset)*2);
 			}
@@ -92,11 +97,13 @@ public class PaintHorrorHead
 			{
 				pointList.add(event.getPoint()); // Base new point.
 
+
 				if (pointList.size() > 1) {
 					ArrayList<Point> betweenPoints = smoothPoints(pointList.get(pointList.size()-2), event.getPoint());
 					for (int i=0; i<betweenPoints.size();++i)
 					//for (int i=betweenPoints.size()-1; i>-1;--i)
 						pointList.add(pointList.size()-1, betweenPoints.get(i)); //TODO
+
 				}
 
 				/*
@@ -128,10 +135,12 @@ public class PaintHorrorHead
 		public ArrayList<Point> smoothPoints(Point point1, Point point2) { // incomplete
 			Point betweenPoint;
 			ArrayList<Point> betweenPoints = new ArrayList<Point>();
+
 			if ((point2.getX()-point1.getX() < FILLER_DISTANCE*FILLER) && 
 				(point2.getY()-point1.getY() < FILLER_DISTANCE*FILLER)) {
 
 				for (int i=1; i<FILLER; ++i) {
+
 					int tempX = (int)(point1.getX() + (point2.getX()-point1.getX()) * ((float)i/FILLER));
 					int tempY = (int)(point1.getY() + (point2.getY()-point1.getY()) * ((float)i/FILLER));
 
@@ -139,6 +148,7 @@ public class PaintHorrorHead
 				}
 				//betweenPoints.remove(0);
 				//betweenPoints.remove(betweenPoints.size()-1);
+
 			}
 			return betweenPoints;
 		}
