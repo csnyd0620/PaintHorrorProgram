@@ -1,5 +1,5 @@
 // Time for something awful.
-// By Jared Hawkins
+// By Jared Hawkins, Christian Snyder
 // 2020-02-01, though some of this was from some old class file, most is new.
 
 import javax.swing.JFrame;
